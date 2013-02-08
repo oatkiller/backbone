@@ -75,8 +75,8 @@ $(document).ready(function() {
       "splat/*args/end":            "splat",
       "*first/complex-:part/*rest": "complex",
       ":entity?*args":              "query",
-      "*anything":                  "anything",
-			"options/p:param/*splat":			"options"
+			"options":			"options",
+      "*anything":                  "anything"
     },
 
     initialize : function(options) {
@@ -136,8 +136,8 @@ $(document).ready(function() {
       this.z = z;
     },
 
-		options: function(optionFromNavigate) {
-			this.optionFromNavigate = optionFromNavigate;
+		options: function(optionsFromNavigate) {
+			this.option = optionsFromNavigate.option;
 		},
 
     routeEvent: function(arg) {
@@ -535,10 +535,10 @@ $(document).ready(function() {
   });
 
 	test("Pass options to router action on navigate", function () {
-		var optionFromNavigate = {};
-		router.navigate("options/p1/splat/is/here",{ optionFromNavigate : optionFromNavigate });
-		strictEqual(router.optionFromNavigate,optionFromNavigate);
-		delete router.optionFromNavigate;
+		var option = {};
+		router.navigate("options",{ option: option, trigger: true });
+		strictEqual(router.option,option);
+		delete router.option;
 	});
 
 });

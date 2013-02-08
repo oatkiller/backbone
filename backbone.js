@@ -982,8 +982,11 @@
     route: function(route, name, callback) {
       if (!_.isRegExp(route)) route = this._routeToRegExp(route);
       if (!callback) callback = this[name];
-      Backbone.history.route(route, _.bind(function(fragment) {
+      Backbone.history.route(route, _.bind(function(fragment,options) {
         var args = this._extractParameters(route, fragment);
+				if (options !== void 0) {
+					args.push(options);
+				}
         callback && callback.apply(this, args);
         this.trigger.apply(this, ['route:' + name].concat(args));
         this.trigger('route', name, args);
@@ -1177,11 +1180,11 @@
     // Attempt to load the current URL fragment. If a route succeeds with a
     // match, returns `true`. If no defined routes matches the fragment,
     // returns `false`.
-    loadUrl: function(fragmentOverride) {
+    loadUrl: function(fragmentOverride,options) {
       var fragment = this.fragment = this.getFragment(fragmentOverride);
       var matched = _.any(this.handlers, function(handler) {
         if (handler.route.test(fragment)) {
-          handler.callback(fragment);
+          handler.callback(fragment,options);
           return true;
         }
       });
@@ -1195,7 +1198,7 @@
     // The options object can contain `trigger: true` if you wish to have the
     // route callback be fired (not usually desirable), or `replace: true`, if
     // you wish to modify the current URL without adding an entry to the history.
-    navigate: function(fragment, options) {
+    navigate: function(fragment,options) {
       if (!History.started) return false;
       if (!options || options === true) options = {trigger: options};
       fragment = this.getFragment(fragment || '');
@@ -1224,7 +1227,7 @@
       } else {
         return this.location.assign(url);
       }
-      if (options.trigger) this.loadUrl(fragment);
+      if (options.trigger) this.loadUrl(fragment,options);
     },
 
     // Update the hash location, either replacing the current entry, or adding
