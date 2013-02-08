@@ -75,7 +75,8 @@ $(document).ready(function() {
       "splat/*args/end":            "splat",
       "*first/complex-:part/*rest": "complex",
       ":entity?*args":              "query",
-      "*anything":                  "anything"
+      "*anything":                  "anything",
+			"options/p:param/*splat":			"options"
     },
 
     initialize : function(options) {
@@ -134,6 +135,10 @@ $(document).ready(function() {
     namedOptional: function(z) {
       this.z = z;
     },
+
+		options: function(optionFromNavigate) {
+			this.optionFromNavigate = optionFromNavigate;
+		},
 
     routeEvent: function(arg) {
     }
@@ -528,5 +533,12 @@ $(document).ready(function() {
     location.replace('http://example.com#route-event/x');
     Backbone.history.checkUrl();
   });
+
+	test("Pass options to router action on navigate", function () {
+		var optionFromNavigate = {};
+		router.navigate("options/p1/splat/is/here",{ optionFromNavigate : optionFromNavigate });
+		strictEqual(router.optionFromNavigate,optionFromNavigate);
+		delete router.optionFromNavigate;
+	});
 
 });
